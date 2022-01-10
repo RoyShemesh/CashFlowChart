@@ -95,7 +95,7 @@
   },
   "include": [
     "src/*"
-, "tests", "jest.config.js"  ],
+, "tests", "jest.config.js", "src/mongo/schema"  ],
   "exclude": [
     "node_modules"
   ]
