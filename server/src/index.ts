@@ -1,11 +1,14 @@
-import express from 'express';
+import Mongoose, { ConnectOptions } from 'mongoose';
+import { PORT, MONGODB_URI } from './utils/config';
+import app from './app';
 
-const app = express();
-app.get('/', (_req, res) => {
-  res.send('Hello worlds!');
-});
-
-const PORT = process.env.PORT || 5000;
+// Mongoose.connect(MONGODB_URI as string)
+// 	.then(() => {
+// 		console.log('connected to monogodb');
 app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
+	console.log(`Listening on port ${PORT}`);
 });
+// })
+// .catch(() => {
+// 	console.log('error occured connecting to MONGODB');
+// });
