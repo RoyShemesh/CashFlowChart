@@ -15,13 +15,13 @@ router.put('/login', async (req, res, next) => {
 		const user: UserFromDb[] = await UserSchema.find({ email: email.toLowerCase() });
 		if (user[0] === undefined || !(await bcrypt.compare(password, user[0].password)))
 			throw { status: 401, msg: 'Username or password are incorrect' };
-		const { accessToken, refreshToken } = login({ userId: user[0]._id });
+		const { accessToken, refreshToken } = login(user[0]._id.toString());
 		res.json({ accessToken, refreshToken });
 	} catch (error) {
 		next(error);
 	}
 });
-router.post('/newToken', (req, res) => {
+router.put('/newToken', (req, res) => {
 	const refreshToken = req.body.token;
 	if (refreshToken === undefined) {
 		return res.status(401).send('Refresh Token Required');
@@ -36,7 +36,7 @@ router.post('/newToken', (req, res) => {
 	});
 });
 
-router.post('/logout', (req, res) => {
+router.put('/logout', (req, res) => {
 	const refreshToken = req.body.token;
 	if (refreshToken === undefined) {
 		return res.status(400).send('Refresh Token Required');

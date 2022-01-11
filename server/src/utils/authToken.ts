@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken';
 import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '../utils/config';
 let refreshTokens: string[] = [];
 
-export const login = (user: { userId: string }) => {
-	const accessToken = generateAccessToken(user);
-	const refreshToken = jwt.sign(user, REFRESH_TOKEN_SECRET);
+export const login = (userId: string) => {
+	const accessToken = generateAccessToken(userId);
+	const refreshToken = jwt.sign(userId, REFRESH_TOKEN_SECRET);
 	refreshTokens.push(refreshToken);
 	return { accessToken, refreshToken };
 };
@@ -23,13 +23,13 @@ export const changeTok = (refToken: string) => {
 	if (!refreshTokens.includes(refToken)) return 403;
 	return jwt.verify(refToken, REFRESH_TOKEN_SECRET, (err, user) => {
 		if (err || user === undefined) return 403;
-		const accessToken = generateAccessToken({ userId: user.userId });
+		const accessToken = generateAccessToken(user.userId);
 		return accessToken;
 	});
 };
 
-function generateAccessToken(user: { userId: string }) {
-	return jwt.sign({ user }, ACCESS_TOKEN_SECRET, {
+function generateAccessToken(userId: string) {
+	return jwt.sign({ userId }, ACCESS_TOKEN_SECRET, {
 		expiresIn: '60s',
 	});
 }
