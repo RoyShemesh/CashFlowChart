@@ -2,7 +2,7 @@ import express from 'express';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 import { SALT } from '../utils/config';
-import UserModel from '../mongo/schema/User';
+import User from '../mongo/schema/User';
 import { checkValidEmail } from '../mongo/controllers/userControllers';
 const router = express.Router();
 
@@ -24,7 +24,12 @@ router.post('/createuser', async (req, res, next) => {
 			throw { msg: 'Email already caught', status: 409 };
 		}
 		const hashedPassword = bcrypt.hashSync(password, SALT);
-		const newUser = new UserModel({ firstName, lastName, email, password: hashedPassword });
+		const newUser = new User({
+			firstName,
+			lastName,
+			email: email.toLowerCase(),
+			password: hashedPassword,
+		});
 		await newUser.save();
 		res.sendStatus(200);
 	} catch (error) {
@@ -32,11 +37,6 @@ router.post('/createuser', async (req, res, next) => {
 	}
 });
 
-router.put('/login', (req, res, next) => {
-	try {
-		const { email, password } = req.body;
-	} catch (error) {}
-});
 export default router;
 
 const validateUserVariables = (firstName: string, lastName: string, email: string): boolean => {

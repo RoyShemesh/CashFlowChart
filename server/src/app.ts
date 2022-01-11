@@ -2,7 +2,9 @@ import express, { Request } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import userRouter from './routes/userRoute';
+import tokenRouter from './routes/tokenRoute';
 import errorHandler from './middleware/errorHandler';
+import tokenMiddleware from './middleware/tokenMiddleware';
 import Mongoose, { ConnectOptions } from 'mongoose';
 import { MONGODB_URI } from './utils/config';
 const app = express();
@@ -23,6 +25,10 @@ app.post('/', (req, res) => {
 	res.send('hello');
 });
 app.use('/user', userRouter);
+app.use('/token', tokenRouter);
+app.get('/', tokenMiddleware, (req, res) => {
+	res.send('good');
+});
 app.use(errorHandler);
 
 export default app;
