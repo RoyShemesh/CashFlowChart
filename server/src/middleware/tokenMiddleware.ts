@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
-import { ACCESS_TOKEN_SECRET } from '../utils/config';
+import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '../utils/config';
 const tokenMiddleware: RequestHandler = (req, res, next) => {
 	const authHeader = req.headers.authorization;
 	if (authHeader === undefined) {
@@ -16,3 +16,15 @@ const tokenMiddleware: RequestHandler = (req, res, next) => {
 };
 
 export default tokenMiddleware;
+
+export const tokenValidation: RequestHandler = (req, res, next) => {
+	const refreshToken = req.body.token;
+	if (refreshToken === undefined) {
+		return res.status(400).send('Refresh Token Required');
+	}
+	jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err: any) => {
+		if (err) return res.status(400).send('Invalid Refresh Token');
+		req.body.refreshToken = refreshToken;
+		next();
+	});
+};
