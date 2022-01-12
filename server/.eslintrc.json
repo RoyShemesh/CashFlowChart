@@ -12,7 +12,7 @@
 	"plugins": ["@typescript-eslint","perttier"],
 	"rules": {
 		"no-use-before-define": "off",
-		"no-throw-literal": "off",
+		// "no-throw-literal": "off",
 		"no-console":"off",
 		"import/extensions": [
 			"error",

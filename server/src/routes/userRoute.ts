@@ -4,6 +4,11 @@ import bcrypt from 'bcrypt';
 import { SALT } from '../utils/config';
 import User from '../mongo/schema/User';
 import { checkValidEmail } from '../mongo/controllers/userControllers';
+import {
+	ErrorEmailAlreadyCaught,
+	ErrorInvalidVariable,
+	ErrorMissingInfo,
+} from '../utils/errorClass';
 const router = express.Router();
 
 router.post('/createuser', async (req, res, next) => {
@@ -15,13 +20,13 @@ router.post('/createuser', async (req, res, next) => {
 			password === undefined ||
 			email === undefined
 		) {
-			throw { status: 400, msg: 'Missing user info' };
+			throw new ErrorMissingInfo();
 		}
 		if (!validateUserVariables(firstName, lastName, email)) {
-			throw { msg: 'Enter invalid varibale', status: 400 };
+			throw new ErrorInvalidVariable();
 		}
 		if (await checkValidEmail(email)) {
-			throw { msg: 'Email already caught', status: 409 };
+			throw new ErrorEmailAlreadyCaught();
 		}
 		const hashedPassword = bcrypt.hashSync(password, SALT);
 		const newUser = new User({

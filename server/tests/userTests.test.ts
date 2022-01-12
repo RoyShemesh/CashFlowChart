@@ -6,7 +6,7 @@ const api = supertest(app);
 
 beforeAll(async () => {
 	await UserModel.deleteMany({});
-});
+}, 10000);
 
 describe('Create user', () => {
 	beforeAll(async () => {
@@ -17,7 +17,7 @@ describe('Create user', () => {
 			email: 'lorem@ipsum.com',
 		};
 		await api.post('/user/createuser').send(newUser).expect(200);
-	});
+	}, 10000);
 
 	test('Valid variables create a user', async () => {
 		const users = await UserModel.find({});
