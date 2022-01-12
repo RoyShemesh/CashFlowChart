@@ -6,5 +6,12 @@ Content-Type: application/json
     "password":"12345"
 }
 ###
+PUT http://localhost:3000/token/newToken
+Content-Type: application/json
+
+{
+    "token":"eyJhbGciOiJIUzI1NiJ9.NjFkZGM1Y2Y2OWM0ZjM5NWY4ZDAwYjIz.hcRpy1QpZKxFw2M2HOKEJsve4e3BOv8HZR0LISxZdBU"
+    }
+###
 GET http://localhost:3000/
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.NjFkZGM1Y2Y2OWM0ZjM5NWY4ZDAwYjIz.hcRpy1QpZKxFw2M2HOKEJsve4e3BOv8HZR0LISxZdBU

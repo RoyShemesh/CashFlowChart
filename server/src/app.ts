@@ -5,7 +5,7 @@ import userRouter from './routes/userRoute';
 import tokenRouter from './routes/tokenRoute';
 import errorHandler from './middleware/errorHandler';
 import tokenMiddleware from './middleware/tokenMiddleware';
-import Mongoose, { ConnectOptions } from 'mongoose';
+import Mongoose from 'mongoose';
 import { MONGODB_URI } from './utils/config';
 const app = express();
 app.use(express.json());

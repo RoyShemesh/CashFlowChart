@@ -4,12 +4,12 @@ import app from '../src/app';
 import UserModel from '../src/mongo/schema/User';
 const api = supertest(app);
 
-beforeEach(async () => {
+beforeAll(async () => {
 	await UserModel.deleteMany({});
 });
 
 describe('Create user', () => {
-	beforeEach(async () => {
+	beforeAll(async () => {
 		const newUser = {
 			firstName: 'Roy',
 			lastName: 'Shemesh',

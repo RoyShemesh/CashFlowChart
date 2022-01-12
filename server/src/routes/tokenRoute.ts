@@ -3,7 +3,7 @@ import validator from 'validator';
 import bcrypt from 'bcrypt';
 import { REFRESH_TOKEN_SECRET, SALT } from '../utils/config';
 import UserSchema from '../mongo/schema/User';
-import { User } from '../utils/interface';
+import { User, UserFromDb } from '../utils/interface';
 import { changeTok, login, logout } from '../utils/authToken';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 const router = express.Router();
@@ -15,7 +15,11 @@ router.put('/login', async (req, res, next) => {
 		const user: UserFromDb[] = await UserSchema.find({ email: email.toLowerCase() });
 		if (user[0] === undefined || !(await bcrypt.compare(password, user[0].password)))
 			throw { status: 401, msg: 'Username or password are incorrect' };
-		const { accessToken, refreshToken } = login(user[0]._id.toString());
+		const { accessToken, refreshToken } = login({
+			id: user[0]._id.toString(),
+			firstName: user[0].firstName,
+			lastName: user[0].lastName,
+		});
 		res.json({ accessToken, refreshToken });
 	} catch (error) {
 		next(error);
@@ -48,8 +52,5 @@ router.put('/logout', (req, res) => {
 		res.sendStatus(400);
 	});
 });
-export default router;
 
-interface UserFromDb extends User {
-	_id: string;
-}
+export default router;
