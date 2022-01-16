@@ -22,6 +22,9 @@ class ErrorBucket extends Error {
 		} else if (this instanceof ErrorAccessTokenRequired) {
 			this.type = 'Access Token Required';
 			this.status = 401;
+		} else if (this instanceof ErrorUnknownParam) {
+			this.type = 'Unknown param was received';
+			this.status = 400;
 		} else {
 			this.type = 'Internal server error';
 			this.status = 500;
@@ -35,3 +38,4 @@ export class ErrorEmailAlreadyCaught extends ErrorBucket {}
 export class ErrorIncorrectVariables extends ErrorBucket {}
 export class ErrorInvalidAccessToken extends ErrorBucket {}
 export class ErrorAccessTokenRequired extends ErrorBucket {}
+export class ErrorUnknownParam extends ErrorBucket {}

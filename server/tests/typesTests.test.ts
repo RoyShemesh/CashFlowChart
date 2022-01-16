@@ -53,16 +53,37 @@ describe('/types Route', () => {
 		const newExpenseType = { typeName: 'Friends', color: '#ff0400' };
 		const newIncomeType = { typeName: 'Babysitter', color: '#e600ff' };
 		await api
-			.put('/types/addexpensetype')
+			.put('/types/addtype/expenseTypes')
 			.send(newExpenseType)
 			.set({ Authorization: token })
 			.expect(200);
 		const res = await api
-			.put('/types/addincometype')
+			.put('/types/addtype/incomeTypes')
 			.send(newIncomeType)
 			.set({ Authorization: token })
 			.expect(200);
-		expect(res.body[0].incomeTypes).toMatchObject({ typeName: 'Babysitter', color: '#e600ff' });
+		expect(res.body.incomeTypes[0]).toEqual(
+			expect.objectContaining({ typeName: 'Babysitter', color: '#e600ff' })
+		);
+		expect(res.body.expenseTypes[2]).toEqual(
+			expect.objectContaining({ typeName: 'Friends', color: '#ff0400' })
+		);
+	});
+	test('Add type with unknown params returns with status 400', async () => {
+		const newExpenseType = { typeName: 'Friends', color: '#ff0400' };
+		await api
+			.put('/types/addtype/unknown')
+			.send(newExpenseType)
+			.set({ Authorization: token })
+			.expect(400);
+	});
+	test('Add type with missing info returns with status 400', async () => {
+		const newExpenseType = { typeName: 'Friends' };
+		await api
+			.put('/types/addtype/expenseTypes')
+			.send(newExpenseType)
+			.set({ Authorization: token })
+			.expect(400);
 	});
 });
 

@@ -11,6 +11,15 @@ export type TokenContent = Omit<User, 'email' | 'password'> & { id: string };
 
 export interface Types {
 	user_id: string;
-	incomeTypes: [{ typeName: string; color: string }];
-	expenseTypes: [{ typeName: string; color: string }];
+	incomeTypes: EachType[];
+	expenseTypes: EachType[];
+}
+
+export interface TypesFromDb extends Types {
+	_id: string;
+}
+
+export interface EachType {
+	typeName: string;
+	color: string;
 }
