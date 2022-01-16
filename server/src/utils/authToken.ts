@@ -24,7 +24,6 @@ export const changeTok = (refToken: string) => {
 	if (!refreshTokens.includes(refToken)) return 403;
 	return jwt.verify(refToken, REFRESH_TOKEN_SECRET, (err, user) => {
 		if (err || user === undefined) return 403;
-		console.log(user);
 		const accessToken = generateAccessToken({
 			id: user.id,
 			firstName: user.firstName,
@@ -36,6 +35,6 @@ export const changeTok = (refToken: string) => {
 
 function generateAccessToken(user: TokenContent) {
 	return jwt.sign({ user }, ACCESS_TOKEN_SECRET, {
-		expiresIn: '60s',
+		expiresIn: '1h',
 	});
 }

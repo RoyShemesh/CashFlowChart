@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import userRouter from './routes/userRoute';
 import tokenRouter from './routes/tokenRoute';
+import typesRouter from './routes/typesRoute';
 import errorHandler from './middleware/errorHandler';
 import tokenMiddleware from './middleware/tokenMiddleware';
 import Mongoose from 'mongoose';
@@ -26,9 +27,7 @@ app.post('/', (req, res) => {
 });
 app.use('/user', userRouter);
 app.use('/token', tokenRouter);
-app.get('/', tokenMiddleware, (req, res) => {
-	res.send('good');
-});
+app.use('/types', tokenMiddleware, typesRouter);
 app.use(errorHandler);
 
 export default app;

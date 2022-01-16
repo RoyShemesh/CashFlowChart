@@ -1,14 +1,12 @@
 import express from 'express';
-import validator from 'validator';
-import bcrypt from 'bcrypt';
-import { SALT } from '../utils/config';
-import User from '../mongo/schema/User';
 import { checkValidEmail } from '../mongo/controllers/userControllers';
 import {
 	ErrorEmailAlreadyCaught,
 	ErrorInvalidVariable,
 	ErrorMissingInfo,
 } from '../utils/errorClass';
+import { createTypes, createUser, validateUserVariables } from '../utils/helpers/userHelper';
+
 const router = express.Router();
 
 router.post('/createuser', async (req, res, next) => {
@@ -28,14 +26,8 @@ router.post('/createuser', async (req, res, next) => {
 		if (await checkValidEmail(email)) {
 			throw new ErrorEmailAlreadyCaught();
 		}
-		const hashedPassword = bcrypt.hashSync(password, SALT);
-		const newUser = new User({
-			firstName,
-			lastName,
-			email: email.toLowerCase(),
-			password: hashedPassword,
-		});
-		await newUser.save();
+		const userId = await createUser(firstName, lastName, email, password);
+		const Types = await createTypes(userId);
 		res.sendStatus(200);
 	} catch (error) {
 		next(error);
@@ -43,10 +35,3 @@ router.post('/createuser', async (req, res, next) => {
 });
 
 export default router;
-
-const validateUserVariables = (firstName: string, lastName: string, email: string): boolean => {
-	if (validator.isEmail(email) && validator.isAlpha(firstName) && validator.isAlpha(lastName)) {
-		return true;
-	}
-	return false;
-};

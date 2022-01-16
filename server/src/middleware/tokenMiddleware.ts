@@ -8,9 +8,8 @@ const tokenMiddleware: RequestHandler = (req, res, next) => {
 	}
 	const token = authHeader.split(' ')[1];
 	jwt.verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
-		console.log(err);
 		if (err) return res.status(403).send('Invalid Access Token');
-		req.body.user = user;
+		req.body.user = user?.user.id;
 		next();
 	});
 };
