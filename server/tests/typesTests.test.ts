@@ -69,6 +69,14 @@ describe('/types Route', () => {
 			expect.objectContaining({ typeName: 'Friends', color: '#ff0400' })
 		);
 	});
+	test('Add exist type will returns with status 409', async () => {
+		const newExpenseType = { typeName: 'Friends', color: '#ff0400' };
+		await api
+			.put('/types/addtype/expenseTypes')
+			.send(newExpenseType)
+			.set({ Authorization: token })
+			.expect(409);
+	});
 	test('Add type with unknown params returns with status 400', async () => {
 		const newExpenseType = { typeName: 'Friends', color: '#ff0400' };
 		await api

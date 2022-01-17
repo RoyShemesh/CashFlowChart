@@ -4,6 +4,7 @@ import cors from 'cors';
 import userRouter from './routes/userRoute';
 import tokenRouter from './routes/tokenRoute';
 import typesRouter from './routes/typesRoute';
+import expensesRouter from './routes/expenseRoute';
 import errorHandler from './middleware/errorHandler';
 import tokenMiddleware from './middleware/tokenMiddleware';
 import Mongoose from 'mongoose';
@@ -28,6 +29,7 @@ app.post('/', (req, res) => {
 app.use('/user', userRouter);
 app.use('/token', tokenRouter);
 app.use('/types', tokenMiddleware, typesRouter);
+app.use('/expenses', tokenMiddleware, expensesRouter);
 app.use(errorHandler);
 
 export default app;

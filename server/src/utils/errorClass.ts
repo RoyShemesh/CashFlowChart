@@ -10,8 +10,14 @@ class ErrorBucket extends Error {
 		} else if (this instanceof ErrorInvalidVariable) {
 			this.type = 'Invalid varibales';
 			this.status = 400;
+		} else if (this instanceof ErrorTransNotFound) {
+			this.type = 'Transaction not found';
+			this.status = 404;
 		} else if (this instanceof ErrorEmailAlreadyCaught) {
 			this.type = 'Email already caught';
+			this.status = 409;
+		} else if (this instanceof ErrorVariablesAlreadyExist) {
+			this.type = 'Variable already exist';
 			this.status = 409;
 		} else if (this instanceof ErrorIncorrectVariables) {
 			this.type = 'Username or password are incorrect';
@@ -39,3 +45,5 @@ export class ErrorIncorrectVariables extends ErrorBucket {}
 export class ErrorInvalidAccessToken extends ErrorBucket {}
 export class ErrorAccessTokenRequired extends ErrorBucket {}
 export class ErrorUnknownParam extends ErrorBucket {}
+export class ErrorVariablesAlreadyExist extends ErrorBucket {}
+export class ErrorTransNotFound extends ErrorBucket {}
