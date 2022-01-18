@@ -25,12 +25,15 @@ class ErrorBucket extends Error {
 		} else if (this instanceof ErrorInvalidAccessToken) {
 			this.type = 'Invalid Access Token';
 			this.status = 403;
+		} else if (this instanceof ErrorForbiddenRequest) {
+			this.type = 'Values does not match';
+			this.status = 403;
 		} else if (this instanceof ErrorAccessTokenRequired) {
 			this.type = 'Access Token Required';
 			this.status = 401;
 		} else if (this instanceof ErrorUnknownParam) {
 			this.type = 'Unknown param was received';
-			this.status = 400;
+			this.status = 404;
 		} else {
 			this.type = 'Internal server error';
 			this.status = 500;
@@ -47,3 +50,4 @@ export class ErrorAccessTokenRequired extends ErrorBucket {}
 export class ErrorUnknownParam extends ErrorBucket {}
 export class ErrorVariablesAlreadyExist extends ErrorBucket {}
 export class ErrorTransNotFound extends ErrorBucket {}
+export class ErrorForbiddenRequest extends ErrorBucket {}

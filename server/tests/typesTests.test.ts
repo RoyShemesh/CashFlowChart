@@ -3,10 +3,10 @@ import supertest from 'supertest';
 import app from '../src/app';
 import TypesModel from '../src/mongo/schema/Types';
 import UserModel from '../src/mongo/schema/User';
-import { Types } from '../src/utils/interface';
 const api = supertest(app);
 beforeAll(async () => {
 	await UserModel.deleteMany({});
+	await TypesModel.deleteMany({});
 	const newUser = {
 		firstName: 'Roy',
 		lastName: 'Shemesh',
@@ -83,7 +83,7 @@ describe('/types Route', () => {
 			.put('/types/addtype/unknown')
 			.send(newExpenseType)
 			.set({ Authorization: token })
-			.expect(400);
+			.expect(404);
 	});
 	test('Add type with missing info returns with status 400', async () => {
 		const newExpenseType = { typeName: 'Friends' };

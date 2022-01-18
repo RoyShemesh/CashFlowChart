@@ -11,6 +11,15 @@ export const deleteExpense = async (transaction_id: string, user_id: string) => 
 	}
 };
 
+export const checkUserExpense = async (transaction_id: string, user_id: string) => {
+	try {
+		await ExpenseSchema.find({ user_id, _id: transaction_id });
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
+
 export const addExpense = async (
 	user_id: string,
 	description: string,
@@ -18,15 +27,20 @@ export const addExpense = async (
 	date: Date,
 	totalExpense: string
 ) => {
-	if (!validator.isNumeric(totalExpense)) throw new ErrorInvalidVariable();
-	const newDate = new Date(date);
-	const newExpense = new ExpenseSchema({
-		user_id,
-		description,
-		type_name,
-		date: newDate,
-		totalExpense: totalExpense,
-	});
-	newExpense.save();
-	return newExpense;
+	try {
+		if (!validator.isNumeric(totalExpense.toString())) throw new ErrorInvalidVariable();
+		const newDate = new Date(date);
+		const newExpense = new ExpenseSchema({
+			user_id,
+			description,
+			type_name,
+			date: newDate,
+			totalExpense: totalExpense,
+		});
+		await newExpense.save();
+		return newExpense;
+	} catch (error) {
+		console.log(error);
+		throw '';
+	}
 };

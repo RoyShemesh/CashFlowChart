@@ -1,7 +1,11 @@
 import express from 'express';
 import ExpenseSchema from '../mongo/schema/Expense';
-import { ErrorMissingInfo, ErrorUnknownParam } from '../utils/errorClass';
-import { addExpense, deleteExpense } from '../mongo/controllers/expenseController';
+import { ErrorForbiddenRequest, ErrorMissingInfo, ErrorUnknownParam } from '../utils/errorClass';
+import {
+	addExpense,
+	checkUserExpense,
+	deleteExpense,
+} from '../mongo/controllers/expenseController';
 import { existType } from '../mongo/controllers/typeController';
 const router = express.Router();
 
@@ -18,6 +22,7 @@ router.delete('/', async (req, res, next) => {
 	try {
 		const { transaction_id, user } = req.body;
 		if (!transaction_id) throw new ErrorMissingInfo();
+		if (!(await checkUserExpense(transaction_id, user))) throw new ErrorForbiddenRequest();
 		const newExpenses = await deleteExpense(transaction_id, user);
 		res.send(newExpenses);
 	} catch (error) {
