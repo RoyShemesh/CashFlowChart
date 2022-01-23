@@ -4,6 +4,7 @@ import app from '../src/app';
 import UserModel from '../src/mongo/schema/User';
 import ExpenseModel from '../src/mongo/schema/Expense';
 import request from 'superagent';
+import { addExpense } from './utils/expenseHelper';
 const api = supertest(app);
 let token: string;
 beforeAll(async () => {
@@ -51,12 +52,12 @@ describe('Manipulation one expense', () => {
 			.put('/expenses/addexpense')
 			.set({ Authorization: token })
 			.send({
-				type_name: 'Car',
+				type_name: 'Car care',
 				totalExpense: '12s3',
 				date: new Date('2000-7-20'),
 				description: 'Fuel',
 			})
-			.expect(404);
+			.expect(400);
 	});
 	test('Add expense with appropriate valus return with status 200', async () => {
 		await api
@@ -72,14 +73,14 @@ describe('Manipulation one expense', () => {
 	});
 });
 
-describe.only('Delete expense', () => {
+describe('Delete expense', () => {
 	let res: request.Response;
 	beforeAll(async () => {
 		await ExpenseModel.deleteMany({});
-		res = await addExpense('Car care', 123, new Date('2000-7-20'), 'Fuel');
+		res = await addExpense('Car care', 123, new Date('2000-7-20'), 'Fuel', token);
 	});
 	test('Delete expense with no transaction_id return with status 400 ', async () => {
-		api.delete('/expenses').set({ Authorization: token }).expect(400);
+		await api.delete('/expenses').set({ Authorization: token }).expect(400);
 	});
 	test('Delete expense with not matching user and transation_id return with status 403', async () => {
 		await api
@@ -101,27 +102,37 @@ describe.only('Delete expense', () => {
 describe('Manipulate all expenses', () => {
 	beforeAll(async () => {
 		await ExpenseModel.deleteMany({});
-		await addExpense('Car care', 123, new Date('2000-7-20'), 'Fuel');
-		await addExpense('Car care', 123, new Date('2000-7-22'), 'Fuel');
-		await addExpense('Car care', 123, new Date('2000-8-22'), 'Fuel');
+		await addExpense('Car care', 123, new Date('2000-7-20'), 'Fuel', token);
+		await addExpense('Car care', 123, new Date('2000-7-22'), 'Fuel', token);
+		await addExpense('Car care', 123, new Date('2000-8-22'), 'Fuel', token);
 	});
 	test('Get all user expenses by year without getting appropriate month return with status 400', async () => {
-		await api.get('/expenses/expensesbymonth/13').set({ Authorization: token }).expect(400);
+		await api
+			.get('/expenses/expensesbymonth')
+			.set({ Authorization: token })
+			.send({ month: 13, year: 2000 })
+			.expect(400);
 	});
 	test('Get all user expenses by month', async () => {
 		const res = await api
-			.get('/expenses/expensesbymonth/7')
+			.get('/expenses/expensesbymonth')
 			.set({ Authorization: token })
+			.send({ month: 7, year: 2000 })
 			.expect(200);
 		expect(res.body).toHaveLength(2);
 	});
 	test('Get all user expenses by year without getting appropriate year return with status 400', async () => {
-		await api.get('/expenses/expensesbymonth/200s').set({ Authorization: token }).expect(400);
+		await api
+			.get('/expenses/expensesbyyear')
+			.set({ Authorization: token })
+			.send({ year: '200s' })
+			.expect(400);
 	});
 	test('Get all user expenses by year', async () => {
 		const res = await api
-			.get('/expenses/expensesbyyear/2000')
+			.get('/expenses/expensesbyyear')
 			.set({ Authorization: token })
+			.send({ year: 2000 })
 			.expect(200);
 		expect(res.body).toHaveLength(3);
 	});
@@ -131,21 +142,4 @@ afterAll(() => {
 	mongoose.connection.close();
 });
 
-const addExpense = async (
-	type_name: string,
-	totalExpense: number,
-	date: Date,
-	description: string
-) => {
-	const res = await api
-		.put('/expenses/addexpense')
-		.set({ Authorization: token })
-		.send({
-			type_name,
-			totalExpense,
-			date,
-			description,
-		})
-		.expect(200);
-	return res;
-};
+export default api;

@@ -1,11 +1,19 @@
 import express from 'express';
 import ExpenseSchema from '../mongo/schema/Expense';
-import { ErrorForbiddenRequest, ErrorMissingInfo, ErrorUnknownParam } from '../utils/errorClass';
+import {
+	ErrorForbiddenRequest,
+	ErrorInvalidVariable,
+	ErrorMissingInfo,
+	ErrorUnknownParam,
+} from '../utils/errorClass';
 import {
 	addExpense,
 	checkUserExpense,
 	deleteExpense,
+	getExpensesByMonth,
+	getExpensesByYear,
 } from '../mongo/controllers/expenseController';
+import { checkValidMonth, checkValidYear } from '../utils/helpers/generalTools';
 import { existType } from '../mongo/controllers/typeController';
 const router = express.Router();
 
@@ -38,6 +46,34 @@ router.put('/addexpense', async (req, res, next) => {
 		const newExpense = await addExpense(user, description, type_name, date, totalExpense);
 		res.send(newExpense);
 	} catch (error) {
+		next(error);
+	}
+});
+
+router.get('/expensesbymonth', async (req, res, next) => {
+	try {
+		const { user, year, month } = req.body;
+		if (year === undefined || month === undefined) throw new ErrorMissingInfo();
+		if (!checkValidMonth(month.toString()) || !checkValidYear(year.toString()))
+			throw new ErrorInvalidVariable();
+		const data = await getExpensesByMonth(month, year, user);
+		res.send(data);
+	} catch (error) {
+		console.log(error);
+		next(error);
+	}
+});
+
+router.get('/expensesbyyear', async (req, res, next) => {
+	try {
+		const { user, year } = req.body;
+		if (year === undefined) throw new ErrorMissingInfo();
+		if (!checkValidYear(year.toString())) throw new ErrorInvalidVariable();
+		const data = await getExpensesByYear(year, user);
+		res.send(data);
+	} catch (error) {
+		console.log(error);
+
 		next(error);
 	}
 });

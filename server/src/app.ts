@@ -5,6 +5,7 @@ import userRouter from './routes/userRoute';
 import tokenRouter from './routes/tokenRoute';
 import typesRouter from './routes/typesRoute';
 import expensesRouter from './routes/expenseRoute';
+import incomesRouter from './routes/incomeRoute';
 import errorHandler from './middleware/errorHandler';
 import tokenMiddleware from './middleware/tokenMiddleware';
 import Mongoose from 'mongoose';
@@ -30,6 +31,7 @@ app.use('/user', userRouter);
 app.use('/token', tokenRouter);
 app.use('/types', tokenMiddleware, typesRouter);
 app.use('/expenses', tokenMiddleware, expensesRouter);
+app.use('/incomes', tokenMiddleware, incomesRouter);
 app.use(errorHandler);
 
 export default app;

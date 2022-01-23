@@ -1,11 +1,12 @@
 import express from 'express';
-import { checkValidEmail } from '../mongo/controllers/userControllers';
+import { createTypes } from '../mongo/controllers/typeController';
+import { checkValidEmail, createUser } from '../mongo/controllers/userControllers';
 import {
 	ErrorEmailAlreadyCaught,
 	ErrorInvalidVariable,
 	ErrorMissingInfo,
 } from '../utils/errorClass';
-import { createTypes, createUser, validateUserVariables } from '../utils/helpers/userHelper';
+import { validateUserVariables } from '../utils/helpers/userHelper';
 
 const router = express.Router();
 

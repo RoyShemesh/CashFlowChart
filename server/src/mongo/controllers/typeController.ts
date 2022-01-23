@@ -33,3 +33,16 @@ export const userAllTypesByKind = async (user_id: string, kind: string) => {
 		throw new ErrorUnknownParam();
 	}
 };
+
+export const createTypes = async (user_id: string) => {
+	const userTypes = new TypesModel({
+		user_id,
+		incomeTypes: [],
+		expenseTypes: [
+			{ typeName: 'Cosmetic', color: '#ffff00' },
+			{ typeName: 'Car care', color: '#ff0400' },
+		],
+	});
+	await userTypes.save();
+	return userTypes;
+};

@@ -35,3 +35,15 @@ export interface Expense {
 export interface ExpenseFromDb extends Expense {
 	_id: string;
 }
+
+export interface Income {
+	user_id: string;
+	description: string;
+	type_name: string;
+	date: Date;
+	totalIncome: number;
+}
+
+export interface IncomeFromDb extends Income {
+	_id: string;
+}
