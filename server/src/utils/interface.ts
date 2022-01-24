@@ -47,3 +47,8 @@ export interface Income {
 export interface IncomeFromDb extends Income {
 	_id: string;
 }
+
+export interface Summary {
+	totalSum: number;
+	[key: string]: any;
+}

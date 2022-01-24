@@ -13,6 +13,7 @@ import {
 	getExpensesByMonth,
 	getExpensesByYear,
 } from '../mongo/controllers/expenseController';
+import { summaryExpenses } from '../utils/helpers/summaryHelper';
 import { checkValidMonth, checkValidYear } from '../utils/helpers/generalTools';
 import { existType } from '../mongo/controllers/typeController';
 const router = express.Router();
@@ -57,7 +58,8 @@ router.get('/expensesbymonth', async (req, res, next) => {
 		if (!checkValidMonth(month.toString()) || !checkValidYear(year.toString()))
 			throw new ErrorInvalidVariable();
 		const data = await getExpensesByMonth(month, year, user);
-		res.send(data);
+		const expenses = { expenseArr: data, summary: await summaryExpenses(data) };
+		res.send(expenses);
 	} catch (error) {
 		console.log(error);
 		next(error);
@@ -70,7 +72,8 @@ router.get('/expensesbyyear', async (req, res, next) => {
 		if (year === undefined) throw new ErrorMissingInfo();
 		if (!checkValidYear(year.toString())) throw new ErrorInvalidVariable();
 		const data = await getExpensesByYear(year, user);
-		res.send(data);
+		const expenses = { expenseArr: data, summary: await summaryExpenses(data) };
+		res.send(expenses);
 	} catch (error) {
 		console.log(error);
 

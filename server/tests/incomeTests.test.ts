@@ -127,7 +127,13 @@ describe('Manipulate all incomes', () => {
 			.set({ Authorization: token })
 			.send({ month: 7, year: 2000 })
 			.expect(200);
-		expect(res.body).toHaveLength(2);
+		expect(res.body.incomeArr).toHaveLength(2);
+		expect(res.body.summary).toEqual(
+			expect.objectContaining({
+				Babysitter: 246,
+				totalSum: 246,
+			})
+		);
 	});
 	test('Get all user incomes by year without getting appropriate year return with status 400', async () => {
 		await api
@@ -142,7 +148,13 @@ describe('Manipulate all incomes', () => {
 			.set({ Authorization: token })
 			.send({ year: 2000 })
 			.expect(200);
-		expect(res.body).toHaveLength(3);
+		expect(res.body.incomeArr).toHaveLength(3);
+		expect(res.body.summary).toEqual(
+			expect.objectContaining({
+				Babysitter: 369,
+				totalSum: 369,
+			})
+		);
 	});
 });
 
