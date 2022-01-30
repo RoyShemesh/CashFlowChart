@@ -1,5 +1,11 @@
 import validator from 'validator';
-
+/**
+ * Validate user varialbes
+ * @param {string} firstName should be string
+ * @param {string} lastName should be string
+ * @param {string} email should be string
+ * @returns return true if everything fine
+ */
 export const validateUserVariables = (
 	firstName: string,
 	lastName: string,

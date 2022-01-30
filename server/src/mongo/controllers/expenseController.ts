@@ -2,6 +2,12 @@ import ExpenseSchema from '../schema/Expense';
 import validator from 'validator';
 import { ErrorInvalidVariable, ErrorTransNotFound } from '../../utils/errorClass';
 import { ExpenseFromDb } from '../../utils/interface';
+/**
+ * Delete one expense
+ * @param {string} transaction_id  expenseId
+ * @param {string} user_id  userId
+ * @returns Array of new expenses
+ */
 export const deleteExpense = async (transaction_id: string, user_id: string) => {
 	try {
 		await ExpenseSchema.findByIdAndDelete(transaction_id);
@@ -11,6 +17,12 @@ export const deleteExpense = async (transaction_id: string, user_id: string) => 
 		throw new ErrorTransNotFound();
 	}
 };
+/**
+ * Check if user does have the expense
+ * @param {string} transaction_id  expenseId
+ * @param {string} user_id  userId
+ * @returns true if he does or false otherwise
+ */
 
 export const checkUserExpense = async (transaction_id: string, user_id: string) => {
 	try {
@@ -21,7 +33,15 @@ export const checkUserExpense = async (transaction_id: string, user_id: string) 
 		return false;
 	}
 };
-
+/**
+ * Add expense to user
+ * @param {string} user_id
+ * @param {string} description
+ * @param {string}
+ * @param {Date} date as Date
+ * @param {string} totalExpense
+ * @returns new expense
+ */
 export const addExpense = async (
 	user_id: string,
 	description: string,
@@ -41,7 +61,13 @@ export const addExpense = async (
 	await newExpense.save();
 	return newExpense;
 };
-
+/**
+ * Get all expenses by month
+ * @param {string} month
+ * @param {string} year
+ * @param {string} user_id  UserId
+ * @returns  {ExpenseFromDb[]} Array of expenses
+ */
 export const getExpensesByMonth = async (month: string, year: string, user_id: string) => {
 	const endDate = { endYear: Number(year), endMonth: Number(month) + 1 };
 	if (month === '12') {
@@ -57,7 +83,12 @@ export const getExpensesByMonth = async (month: string, year: string, user_id: s
 	});
 	return data;
 };
-
+/**
+ * Get all expenses by year
+ * @param {string} year
+ * @param {string} user_id  userId
+ * @returns  {ExpenseFromDb[]} Array of expenses
+ */
 export const getExpensesByYear = async (year: string, user_id: string) => {
 	const data: ExpenseFromDb[] = await ExpenseSchema.find({
 		user_id,

@@ -1,5 +1,9 @@
 import { ExpenseFromDb, IncomeFromDb, Summary } from '../interface';
-
+/**
+ * Get all expenses summered
+ * @param {ExpenseFromDb[]} expensesArr as ExpenseFromDb array
+ * @returns {Summary} Summary object in summary type
+ */
 export const summaryExpenses = (expensesArr: ExpenseFromDb[]) => {
 	const summary: Summary = { totalSum: 0 };
 	expensesArr.forEach((expense) => {
@@ -10,6 +14,11 @@ export const summaryExpenses = (expensesArr: ExpenseFromDb[]) => {
 	});
 	return summary;
 };
+/**
+ * Get all expenses incomes
+ * @param incomesArr {IncomeFromDb[]}
+ * @returns {Summary} Summary object in summary type
+ */
 export const summaryIncomes = (incomesArr: IncomeFromDb[]) => {
 	const summary: Summary = { totalSum: 0 };
 	incomesArr.forEach((income) => {

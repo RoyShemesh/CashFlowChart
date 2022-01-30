@@ -50,5 +50,5 @@ export interface IncomeFromDb extends Income {
 
 export interface Summary {
 	totalSum: number;
-	[key: string]: any;
+	[key: string]: number;
 }
